@@ -10,6 +10,14 @@ export function getUserbyId(userId) {
     return axios.get(base_url + "/getUser/" + userId)
 }
 
+export function login(user){
+    return axios.get(base_url + "/login",user)
+}
+
+export function signUp() {
+    return axios.post(base_url+"/signUp")
+}
+
 // export function listOfCustomers() {
 //     return axios.get(baseUrl + "/getAllCustomers");
 // }

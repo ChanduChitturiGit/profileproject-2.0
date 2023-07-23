@@ -6,13 +6,16 @@ from flask_smorest import Api
 from routers.user_rout import blp as userBlueprint
 import models
 import os
+import flask_cors
 
 
 import secrets
 
 def create_app(db_url=None):
     app=Flask(__name__)
-    CORS(app)
+    # CORS(app)
+    cors = flask_cors.CORS()
+    cors.init_app(app)
 
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "Stores REST API"
@@ -30,6 +33,7 @@ def create_app(db_url=None):
     
     app.config["JWT_ALGORITHM"]="HS256"
     app.config["JWT_SECRET_KEY"]= str(secrets.SystemRandom().getrandbits(100))
+    app.config['JWT_ACCESS_LIFESPAN'] = {'minutes': 30}
     jwt=JWTManager()
     
     db.init_app(app)

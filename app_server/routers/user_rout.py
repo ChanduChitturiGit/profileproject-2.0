@@ -52,12 +52,11 @@ class Login(MethodView):
         data = UserModel.query.filter(UserModel.username == user_data["username"]).first()
         if data:
             if pbkdf2_sha256.verify(user_data["password"],data.hashed_password):
-                token = create_access_token(identity={"id": data.id,
+                access_token = create_access_token(identity={"id": data.id,
                                                       "username": data.username,
                                                       "role": data.role})
                 
-                return {"Access_token": token,
-                        "Type": "Bearer"}
+                return {"access_token" : access_token,"id":data.id}
             abort(409, message="Invalid Password.")
         abort(404, message="User not Found.")
             
@@ -76,7 +75,7 @@ class Logout(MethodView):
 
 @blp.route('/users/getUser/<int:user_id>')
 class GetUser(MethodView):
-    # @jwt_required()
+    @jwt_required()
     @cross_origin()
     @blp.response(200,UserSchema)
     def get(self,user_id):
